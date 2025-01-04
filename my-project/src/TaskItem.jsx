@@ -24,13 +24,13 @@ const TaskItem = ({ todo, delButton, upperCaseOne, toggleComplete, index, copyTo
 
   return (
     <div
-      className={`group flex items-center gap-3 p-4 bg-gray-50 hover:bg-gray-200 rounded-lg transition-all transform ${
-        isVisible
-          ? 'opacity-100 translate-y-0'
-          : 'opacity-0 translate-y-4'
-      }`}
-      style={{ transitionDuration: '500ms', transitionTimingFunction: 'ease-out' }}
-    >
+    className={`group flex items-center gap-3 p-4 bg-gray-50 hover:bg-gray-200 rounded-lg transition-all transform ${
+      isVisible
+        ? 'opacity-100 translate-y-0'
+        : 'opacity-0 translate-y-4'
+    } hover:scale-105`} 
+    style={{ transitionDuration: '500ms', transitionTimingFunction: 'ease-out' }}
+  >
       <input
         type="checkbox"
         checked={todo.completed}
@@ -48,7 +48,7 @@ const TaskItem = ({ todo, delButton, upperCaseOne, toggleComplete, index, copyTo
               className="border-b border-gray-300 focus:outline-none focus:border-blue-500 px-1 py-0.5"
             />
           ) : (
-            <span className={todo.completed ? 'line-through text-gray-400' : 'text-gray-500'}>
+            <span className={todo.completed ? 'line-through text-gray-400' : 'text-gray-500 font-bold'}>
               {todo.task}
             </span>
           )}
