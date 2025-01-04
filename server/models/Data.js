@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const todoSchema = new mongoose.Schema({
     userID: {
         type: String,
-        required: true,  // To ensure tasks are associated with a user
       },
       taskID: {
         type: String,
