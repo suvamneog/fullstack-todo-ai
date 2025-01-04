@@ -2,7 +2,7 @@
 import TaskItem from "./TaskItem";
 const TaskList = ({ addTodo, delButton, upperCaseOne, toggleComplete, copyToClipboard, editTodo}) => {
   return (
-    <div className="space-y-1">
+    <div className="space-y-4">
       {addTodo.map((todo, index) => (
         <TaskItem
           key={todo.id}

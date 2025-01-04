@@ -1,11 +1,17 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Clipboard, Edit2, Check } from 'lucide-react';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const TaskItem = ({ todo, delButton, upperCaseOne, toggleComplete, index, copyToClipboard, editTodo }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTask, setEditedTask] = useState(todo.task);
+  const [isVisible, setIsVisible] = useState(false); // state to handle task visibility
+
+  useEffect(() => {
+    // Set the task to visible after mounting for the fade-in effect
+    setIsVisible(true);
+  }, []);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -17,7 +23,14 @@ const TaskItem = ({ todo, delButton, upperCaseOne, toggleComplete, index, copyTo
   };
 
   return (
-    <div className="group flex items-center gap-3 p-4 hover:bg-gray-50 rounded-lg transition-colors">
+    <div
+      className={`group flex items-center gap-3 p-4 bg-gray-50 hover:bg-gray-200 rounded-lg transition-all transform ${
+        isVisible
+          ? 'opacity-100 translate-y-0'
+          : 'opacity-0 translate-y-4'
+      }`}
+      style={{ transitionDuration: '500ms', transitionTimingFunction: 'ease-out' }}
+    >
       <input
         type="checkbox"
         checked={todo.completed}
@@ -25,8 +38,8 @@ const TaskItem = ({ todo, delButton, upperCaseOne, toggleComplete, index, copyTo
         className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
       />
       <div className="flex-grow">
-        <div className={`flex items-center gap-2 ${todo.completed ? "text-gray-400" : "text-gray-700"}`}>
-          <span className="text-sm text-gray-400">TASK-{index + 1}</span>
+        <div className={`flex items-center gap-4 ${todo.completed ? 'text-gray-400' : 'text-gray-700'}`}>
+          <span className="text-sm text-gray-400 font-bold">TASK-{index + 1}</span>
           {isEditing ? (
             <input
               type="text"
@@ -35,7 +48,7 @@ const TaskItem = ({ todo, delButton, upperCaseOne, toggleComplete, index, copyTo
               className="border-b border-gray-300 focus:outline-none focus:border-blue-500 px-1 py-0.5"
             />
           ) : (
-            <span className={todo.completed ? "line-through" : ""}>
+            <span className={todo.completed ? 'line-through text-gray-400' : 'text-gray-500'}>
               {todo.task}
             </span>
           )}
@@ -79,4 +92,3 @@ const TaskItem = ({ todo, delButton, upperCaseOne, toggleComplete, index, copyTo
 };
 
 export default TaskItem;
-
