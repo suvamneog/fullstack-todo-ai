@@ -5,9 +5,9 @@ const router = express.Router();
 
 router.get("/", getTask )
 router.post("/", saveTask)
-router.put("/:taskID", updateTask)
-router.put("/:taskID/uppercase", upperCaseTask)
-router.delete("/:taskID", deleteTask)
+router.put("/:id", updateTask)
+router.put("/:id/uppercase", upperCaseTask)
+router.delete("/:id", deleteTask)
 
 
 module.exports=router;

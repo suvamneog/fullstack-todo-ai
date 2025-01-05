@@ -2,28 +2,33 @@ const dataModel = require("../models/Data");
 
 //showAll
 module.exports.getTask = async (req, res) => {
-  const tasks = await dataModel.find({});
+    const userID = req.cookies.userID;
+    try {
+  const tasks = await dataModel.find({userID});
   res.send(tasks);
+}
+catch (error) {
+    res.status(500).send({ message: "Error fetching tasks", error });
+  }
 };
 
-//save
+//add & save
 module.exports.saveTask = async (req, res) => {
-  let { task, taskID } = req.body;
+  let { task, id } = req.body;
   const userID = req.cookies.userID;
-  dataModel.create({ task, userID, taskID }).then((data) => {
+  const newTask = await dataModel.create({ task, userID, id,  completed: false});
     console.log("task saved");
-    console.log({ task, userID, taskID });
-    res.send(task);
-  });
-};
+    console.log({ task, userID, id });
+    res.send(newTask);
+  };
 
 //update
 module.exports.updateTask = async (req, res) => {
   let { task } = req.body;
-  const { taskID } = req.params;
-  console.log("Updating task with taskID:", taskID, "and task:", task);
+  const { id } = req.params;
+  console.log("Updating task with taskID:", id, "and task:", task);
   const updatedTask = await dataModel.findOneAndUpdate(
-    { taskID },
+    { id },
     { task },
     { new: true }
   );
@@ -37,9 +42,9 @@ module.exports.updateTask = async (req, res) => {
 //uppercase
 module.exports.upperCaseTask = async (req, res) => {
   let { task } = req.body;
-  const { taskID } = req.params;
+  const { id } = req.params;
   const newTask = await dataModel.findOneAndUpdate(
-    { taskID },
+    { id },
     { $set: { task: task.toUpperCase(), completed: true } },
     { new: true }
   );
@@ -53,9 +58,9 @@ module.exports.upperCaseTask = async (req, res) => {
 //delete
 module.exports.deleteTask = async (req, res) => {
   let { task } = req.body;
-  const { taskID } = req.params;
+  const { id } = req.params;
   const delTask = await dataModel.findOneAndDelete(
-    { taskID },
+    { id },
     { task },
     { new: true }
   );

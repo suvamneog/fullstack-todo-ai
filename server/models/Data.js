@@ -3,7 +3,7 @@ const todoSchema = new mongoose.Schema({
     userID: {
         type: String,
       },
-      taskID: {
+      id: {
         type: String,
         required: true,  // Unique task identifier
       },

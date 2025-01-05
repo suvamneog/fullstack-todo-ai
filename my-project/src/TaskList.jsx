@@ -5,7 +5,7 @@ const TaskList = ({ addTodo, delButton, upperCaseOne, toggleComplete, copyToClip
     <div className="space-y-4">
       {addTodo.map((todo, index) => (
         <TaskItem
-          key={todo.id}
+          key={todo.id || index}
           todo={todo}
           delButton={delButton}
           upperCaseOne={upperCaseOne}
