@@ -11,22 +11,26 @@ const app = express();
 // Middleware
 app.use(cors({
     origin: "http://localhost:5173",  // Frontend URL
+    methods: "GET,POST,PUT,PATCH,DELETE",
     credentials: true,
 }));
+
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Generate and set userID cookie if not already set
+
 app.use("/", (req, res, next) => {
     let userID = req.cookies.userID;
     if (!userID) {
         userID = uuidv4();
         res.cookie("userID", userID, {
-            httpOnly: true,
-            sameSite: 'None',  // Ensures cookies work for same-site requests
-            secure: "true",
-            maxAge: 1000 * 60 * 60 * 24 * 30,  // 30 days
+            httpOnly: false,  // Change to false so it's accessible via JavaScript
+            maxAge: 5 * 24 * 60 * 60 * 1000,
+            secure: false,    // Change to false for local development
+            sameSite: 'Lax',
+            path: "/",
         });
     }
     next();
@@ -35,8 +39,15 @@ app.use("/", (req, res, next) => {
 // Connect to database
 connectDB();
 
+app.get("/", (req,res) => {
+    res.redirect("/tasks");
+});
 // Routes
 app.use("/tasks", taskRoutes);
 
+
+app.get("/", (req,res) => {
+    res.redirect("/tasks");
+});
 
 module.exports = app;

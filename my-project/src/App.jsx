@@ -6,8 +6,8 @@ import Cookies from "js-cookie";
 
 
 const App = () => {
-  const [todos, setTodos] = useState("");
-  const [addTodo, setAddTodo] = useState([]);
+  const [todos, setTodos] = useState(""); 
+  const [addTodo, setAddTodo] = useState([]); 
 
   const userID = Cookies.get("userID");
 useEffect(() => {
