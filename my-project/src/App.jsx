@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
 import TaskList from "./TaskList";
 import InputField from "./InputField";
 import { fetchTask, saveTask, delTask, upperTask, updatedTask } from "../src/services/api";
 import Cookies from "js-cookie";
+// import { completedTask } from "../../server/controllers/taskController";
 
 const App = () => {
   const [todos, setTodos] = useState("");
@@ -39,7 +39,6 @@ getTasks();
     if (todos.trim() !== "" && userID) {
       const newData = {
         userID: userID,
-        id: uuidv4(),
         task: todos,
         completed: false,
       };
@@ -94,7 +93,24 @@ getTasks();
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
       )
     );
-  };
+  }
+
+  // const toggleComplete = async(id) => {
+  //   try {
+  //     const completeTask = await completedTask(id); 
+  //   setAddTodo((prevTodo) =>
+  //     prevTodo.map((todo) =>
+  //       todo.id === id ? { ...todo, completed: completeTask.completed } : todo
+  //     )
+  //   )
+  //   console.log(completeTask);
+  // }
+  // catch (error) {
+  //   console.error("Error uppercase task:", error);
+  // }
+  // }
+
+
 
   const copyToClipboard = (task) => {
     navigator.clipboard.writeText(task).catch((err) => {

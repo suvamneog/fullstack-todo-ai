@@ -32,3 +32,9 @@ export const updatedTask = async(id, task) => {
     console.log("Response from backend:", response.data);
     return response.data;
 };
+
+// export const completedTask = async(id) => {
+//     const response = await axios.patch(`${API_URL}/tasks/${id}`);
+//     console.log("Response from backend:", response.data);
+//     return response.data;
+// };

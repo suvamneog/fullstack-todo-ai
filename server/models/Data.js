@@ -1,11 +1,13 @@
 const mongoose = require("mongoose");
+const { v4: uuidv4 } = require('uuid');
 const todoSchema = new mongoose.Schema({
     userID: {
         type: String,
       },
       id: {
         type: String,
-        required: true,  // Unique task identifier
+        required: true, 
+       default: () => uuidv4() // Unique task identifier
       },
       task: {
         type: String,

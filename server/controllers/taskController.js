@@ -1,7 +1,7 @@
 const dataModel = require("../models/Data");
 
 //showAll
-module.exports.getTask = async (req, res) => {
+const getTask = async (req, res) => {
     const userID = req.cookies.userID;
     try {
   const tasks = await dataModel.find({userID});
@@ -13,17 +13,17 @@ catch (error) {
 };
 
 //add & save
-module.exports.saveTask = async (req, res) => {
+const saveTask = async (req, res) => {
   let { task, id } = req.body;
   const userID = req.cookies.userID;
-  const newTask = await dataModel.create({ task, userID, id,  completed: false});
+  const newTask = await dataModel.create({ task, userID, completed: false});
     console.log("task saved");
-    console.log({ task, userID, id });
+    console.log({ task, userID});
     res.send(newTask);
   };
 
 //update
-module.exports.updateTask = async (req, res) => {
+const updateTask = async (req, res) => {
   let { task } = req.body;
   const { id } = req.params;
   // console.log("Updating task with taskID:", id, "and task:", task);
@@ -40,7 +40,7 @@ module.exports.updateTask = async (req, res) => {
 };
 
 //uppercase
-module.exports.upperCaseTask = async (req, res) => {
+const upperCaseTask = async (req, res) => {
   console.log(req.body);
   const { id } = req.params;
   let { task } = req.body;
@@ -57,7 +57,7 @@ module.exports.upperCaseTask = async (req, res) => {
 };
 
 //delete
-module.exports.deleteTask = async (req, res) => {
+const deleteTask = async (req, res) => {
   const { id } = req.params;
   const delTask = await dataModel.findOneAndDelete({ id });
   if (!delTask) {
@@ -65,4 +65,28 @@ module.exports.deleteTask = async (req, res) => {
   }
   res.send(delTask);
   console.log(delTask);
+};
+
+//completeTask
+// const completedTask = async (req, res) => {
+//   const { id } = req.params;
+//   const task = await dataModel.findOne({ id });
+//   const completeTask = await dataModel.findOneAndUpdate(
+//     { id },
+//     {completed: !task.completed},
+//     { new: true }
+//   );
+//   if (!completeTask) {
+//     return res.status(404).send({ message: "Task not found." });
+//   }
+//   res.send(completeTask);
+//   console.log(completeTask);
+// };
+
+module.exports = {
+  getTask,
+  saveTask,
+  updateTask,
+  upperCaseTask,
+  deleteTask,
 };
