@@ -20,3 +20,15 @@ export const delTask = async (id) => {
         console.log("Response from backend:", response.data);
     return response.data;
     };
+
+    export const upperTask = async (id, task) => {
+        try {
+          // Send the task in the body as part of the PUT request
+          const response = await axios.put(`${API_URL}/tasks/${id}/uppercase`, { task: task });
+          console.log("Response from backend:", response.data);
+          return response.data;
+        } catch (error) {
+          console.error("Error in upperTask API:", error);
+          throw error; // Rethrow error to be caught in the calling function
+        }
+      };

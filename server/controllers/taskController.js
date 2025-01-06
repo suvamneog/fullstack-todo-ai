@@ -41,11 +41,12 @@ module.exports.updateTask = async (req, res) => {
 
 //uppercase
 module.exports.upperCaseTask = async (req, res) => {
-  let { task } = req.body;
+  console.log(req.body);
   const { id } = req.params;
+  let { task } = req.body;
   const newTask = await dataModel.findOneAndUpdate(
     { id },
-    { $set: { task: task.toUpperCase(), completed: true } },
+    { $set: { task: task.toUpperCase()} },
     { new: true }
   );
   if (!newTask) {

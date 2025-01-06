@@ -76,7 +76,7 @@ const TaskItem = ({ todo, delButton, upperCaseOne, toggleComplete, index, copyTo
         <DeleteIcon />
       </button>
       <button
-        onClick={() => upperCaseOne(todo.id)}
+        onClick={() => upperCaseOne(todo.id, todo.task)}
         className="opacity-0 group-hover:opacity-100 p-2 text-gray-400 hover:text-gray-600 transition-all"
       >
         Uppercase

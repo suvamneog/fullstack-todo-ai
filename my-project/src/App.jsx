@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import TaskList from "./TaskList";
 import InputField from "./InputField";
-import { fetchTask, saveTask, delTask } from "../src/services/api";
+import { fetchTask, saveTask, delTask, upperTask } from "../src/services/api";
 import Cookies from "js-cookie";
 
 const App = () => {
@@ -77,13 +77,19 @@ getTasks();
 
 
 
-  const upperCaseOne = (id) => {
+  const upperCaseOne = async (id,task) => {
+    try {
+      const upperCaseTask = await upperTask(id,task);
     setAddTodo((prevTodo) =>
       prevTodo.map((todo) =>
-        todo.id === id ? { ...todo, task: todo.task.toUpperCase() } : todo
+        todo.id === id ? { ...todo, task: upperCaseTask.task } : todo)
       )
-    );
-  };
+      console.log(upperCaseTask);
+    }
+      catch (error) {
+        console.error("Error uppercase task:", error);
+      }
+  }
 
   const toggleComplete = (id) => {
     setAddTodo((prevTodo) =>
