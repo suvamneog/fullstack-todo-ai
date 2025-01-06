@@ -57,13 +57,8 @@ module.exports.upperCaseTask = async (req, res) => {
 
 //delete
 module.exports.deleteTask = async (req, res) => {
-  let { task } = req.body;
   const { id } = req.params;
-  const delTask = await dataModel.findOneAndDelete(
-    { id },
-    { task },
-    { new: true }
-  );
+  const delTask = await dataModel.findOneAndDelete({ id });
   if (!delTask) {
     return res.status(404).send({ message: "Task not found." });
   }

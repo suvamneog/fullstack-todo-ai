@@ -13,3 +13,10 @@ export const saveTask = async (taskData) => {
         console.log("Response from backend:", response.data);
     return response.data;
 };
+
+export const delTask = async (id) => {
+    const response = await axios.delete(`${API_URL}/tasks/${id}`, id, {
+        withCredentials: true}  );
+        console.log("Response from backend:", response.data);
+    return response.data;
+    };

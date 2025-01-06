@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import TaskList from "./TaskList";
 import InputField from "./InputField";
-import { fetchTask, saveTask } from "../src/services/api";
+import { fetchTask, saveTask, delTask } from "../src/services/api";
 import Cookies from "js-cookie";
 
 const App = () => {
@@ -60,9 +60,22 @@ getTasks();
 
 
 
-  const delButton = (id) => {
-    setAddTodo((prevTodo) => prevTodo.filter((todo) => todo.id !== id));
+  // const delButton = (id) => {
+  //   setAddTodo((prevTodo) => prevTodo.filter((todo) => todo.id !== id));
+  // };
+
+  const delButton = async (id) => {
+    try {
+      const deletedTask = await delTask(id);
+      setAddTodo((prevTodo) => prevTodo.filter((todo) => todo.id !== id));
+      console.log(deletedTask);
+    }
+    catch (error) {
+      console.error("Error deleting task:", error);
+    }
   };
+
+
 
   const upperCaseOne = (id) => {
     setAddTodo((prevTodo) =>
