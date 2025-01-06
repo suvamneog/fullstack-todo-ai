@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import TaskList from "./TaskList";
 import InputField from "./InputField";
-import { fetchTask, saveTask, delTask, upperTask, updatedTask } from "../src/services/api";
+import { fetchTask, saveTask, delTask, upperTask, updatedTask , completedTask} from "../src/services/api";
 import Cookies from "js-cookie";
-// import { completedTask } from "../../server/controllers/taskController";
+
 
 const App = () => {
   const [todos, setTodos] = useState("");
@@ -14,7 +14,7 @@ useEffect(() => {
   const getTasks = async() => {
     try {
     const tasks = await fetchTask();
-    console.log("Fetched tasks:", tasks);
+    // console.log("Fetched tasks:", tasks);
     setAddTodo(tasks);
   }
   catch (error) {
@@ -63,7 +63,8 @@ getTasks();
   const delButton = async (id) => {
     try {
       const deletedTask = await delTask(id);
-      setAddTodo((prevTodo) => prevTodo.filter((todo) => todo.id !== id));
+      setAddTodo((prevTodo) => prevTodo.filter((todo) => todo.id !== id)
+    );
       console.log(deletedTask);
     }
     catch (error) {
@@ -80,35 +81,35 @@ getTasks();
       prevTodo.map((todo) =>
         todo.id === id ? { ...todo, task: upperCaseTask.task } : todo)
       )
-      console.log(upperCaseTask);
+      // console.log(upperCaseTask);
     }
       catch (error) {
         console.error("Error uppercase task:", error);
       }
   }
 
-  const toggleComplete = (id) => {
-    setAddTodo((prevTodo) =>
-      prevTodo.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
-  }
-
-  // const toggleComplete = async(id) => {
-  //   try {
-  //     const completeTask = await completedTask(id); 
+  // const toggleComplete = (id) => {
   //   setAddTodo((prevTodo) =>
   //     prevTodo.map((todo) =>
-  //       todo.id === id ? { ...todo, completed: completeTask.completed } : todo
+  //       todo.id === id ? { ...todo, completed: !todo.completed } : todo
   //     )
-  //   )
-  //   console.log(completeTask);
+  //   );
   // }
-  // catch (error) {
-  //   console.error("Error uppercase task:", error);
-  // }
-  // }
+
+  const toggleComplete = async(id) => {
+    try {
+      const updateTask = await completedTask(id); 
+    setAddTodo((prevTodo) =>
+      prevTodo.map((todo) =>
+        todo.id === id ? { ...todo, completed: updateTask.completed } : todo
+      )
+    );
+    // console.log(updateTask);
+  }
+  catch (error) {
+    console.error("Error uppercase task:", error);
+  }
+  };
 
 
 
@@ -135,7 +136,7 @@ getTasks();
       prevTodo.map((todo) =>
         todo.id === id ? { ...todo, task: updateTask.task } : todo
       ))
-      console.log(updateTask);
+      // console.log(updateTask);
     }
     catch (error) {
       console.error("Error update task:", error);

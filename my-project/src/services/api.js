@@ -17,24 +17,24 @@ export const saveTask = async (taskData) => {
 export const delTask = async (id) => {
     const response = await axios.delete(`${API_URL}/tasks/${id}`, id, {
         withCredentials: true}  );
-        console.log("Response from backend:", response.data);
+        // console.log("Response from backend:", response.data);
     return response.data;
     };
 
 export const upperTask = async (id, task) => {
           const response = await axios.put(`${API_URL}/tasks/${id}/uppercase`, { task: task });
-          console.log("Response from backend:", response.data);
+        //   console.log("Response from backend:", response.data);
           return response.data;
     };
         
 export const updatedTask = async(id, task) => {
     const response = await axios.put(`${API_URL}/tasks/${id}`, { task: task });
-    console.log("Response from backend:", response.data);
+    // console.log("Response from backend:", response.data);
     return response.data;
 };
 
-// export const completedTask = async(id) => {
-//     const response = await axios.patch(`${API_URL}/tasks/${id}`);
-//     console.log("Response from backend:", response.data);
-//     return response.data;
-// };
+export const completedTask = async(id) => {
+    const response = await axios.patch(`${API_URL}/tasks/${id}`);
+    // console.log("Response from backend:", response.data);
+    return response.data;
+};

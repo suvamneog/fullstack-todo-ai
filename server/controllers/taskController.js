@@ -67,21 +67,21 @@ const deleteTask = async (req, res) => {
   console.log(delTask);
 };
 
-//completeTask
-// const completedTask = async (req, res) => {
-//   const { id } = req.params;
-//   const task = await dataModel.findOne({ id });
-//   const completeTask = await dataModel.findOneAndUpdate(
-//     { id },
-//     {completed: !task.completed},
-//     { new: true }
-//   );
-//   if (!completeTask) {
-//     return res.status(404).send({ message: "Task not found." });
-//   }
-//   res.send(completeTask);
-//   console.log(completeTask);
-// };
+
+const completedTask = async (req, res) => {
+  const { id } = req.params;
+  const task = await dataModel.findOne({ id });
+  const updatedTask = await dataModel.findOneAndUpdate(
+    { id },
+    {completed: !task.completed},
+    { new: true }
+  );
+  if (!updatedTask) {
+    return res.status(404).send({ message: "Task not found." });
+  }
+  res.send(updatedTask);
+  console.log(updatedTask);
+};
 
 module.exports = {
   getTask,
@@ -89,4 +89,5 @@ module.exports = {
   updateTask,
   upperCaseTask,
   deleteTask,
+  completedTask
 };

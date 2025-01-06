@@ -8,7 +8,7 @@ router.post("/", saveTask)
 router.put("/:id", updateTask)
 router.put("/:id/uppercase", upperCaseTask)
 router.delete("/:id", deleteTask)
-// router.patch("/:id",completedTask)
+router.patch("/:id",completedTask)
 
 
 module.exports=router;
