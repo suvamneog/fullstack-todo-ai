@@ -26,7 +26,7 @@ module.exports.saveTask = async (req, res) => {
 module.exports.updateTask = async (req, res) => {
   let { task } = req.body;
   const { id } = req.params;
-  console.log("Updating task with taskID:", id, "and task:", task);
+  // console.log("Updating task with taskID:", id, "and task:", task);
   const updatedTask = await dataModel.findOneAndUpdate(
     { id },
     { task },
