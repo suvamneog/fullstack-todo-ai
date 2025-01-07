@@ -39,6 +39,7 @@ const App = () => {
   //   }
   // };
 
+  //ADD
   const addButton = async () => {
     if (todos.trim() !== "" && userID) {
       const newData = {
@@ -62,6 +63,7 @@ const App = () => {
   //   setAddTodo((prevTodo) => prevTodo.filter((todo) => todo.id !== id));
   // };
 
+  //DELETE
   const delButton = async (id) => {
     try {
       const deletedTask = await delTask(id);
@@ -72,6 +74,7 @@ const App = () => {
     }
   };
 
+  //UPPERCASE
   const upperCaseOne = async (id, task) => {
     try {
       const upperCaseTask = await upperTask(id, task);
@@ -94,6 +97,7 @@ const App = () => {
   //   );
   // }
 
+  //COMPLETED
   const toggleComplete = async (id) => {
     try {
       const updateTask = await completedTask(id);
@@ -108,6 +112,7 @@ const App = () => {
     }
   };
 
+  //COPY
   const copyToClipboard = (task) => {
     navigator.clipboard.writeText(task).catch((err) => {
       console.error("Failed to copy: ", err);
@@ -122,6 +127,7 @@ const App = () => {
   //   );
   // };
 
+  //EDIT
   const editTodo = async (id, task) => {
     try {
       const updateTask = await updatedTask(id, task);
