@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import TaskList from "./TaskList";
 import InputField from "./InputField";
+import { CopilotKit } from "@copilotkit/react-core"; 
+import { CopilotPopup } from "@copilotkit/react-ui";
+import "@copilotkit/react-ui/styles.css";
 import {
   fetchTask,
   saveTask,
@@ -144,6 +147,7 @@ const App = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-8">
+       <CopilotKit publicApiKey="ck_pub_8bbd49b5b226075af7b54c1e397c5751"> 
       <InputField
         todos={todos}
         updateVal={(e) => setTodos(e.target.value)}
@@ -158,6 +162,8 @@ const App = () => {
         copyToClipboard={copyToClipboard}
         editTodo={editTodo}
       />
+      <CopilotPopup />
+    </CopilotKit>
     </div>
   );
 };
