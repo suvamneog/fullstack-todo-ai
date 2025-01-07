@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = "http://localhost:5001";
+const API_URL = "http://localhost:3001";
 
 export const fetchTask = async () => {
     const response = await axios.get(`${API_URL}/tasks`, {
@@ -16,26 +16,29 @@ export const saveTask = async (taskData) => {
 };
 
 export const delTask = async (id) => {
-    const response = await axios.delete(`${API_URL}/tasks/${id}`, id, {
+    const response = await axios.delete(`${API_URL}/tasks/${id}`, {
         withCredentials: true}  );
         // console.log("Response from backend:", response.data);
     return response.data;
     };
 
 export const upperTask = async (id, task) => {
-          const response = await axios.put(`${API_URL}/tasks/${id}/uppercase`, { task: task });
+          const response = await axios.put(`${API_URL}/tasks/${id}/uppercase`, { task: task },{
+            withCredentials: true});
         //   console.log("Response from backend:", response.data);
           return response.data;
     };
         
 export const updatedTask = async(id, task) => {
-    const response = await axios.put(`${API_URL}/tasks/${id}`, { task: task });
+    const response = await axios.put(`${API_URL}/tasks/${id}`, { task: task },{
+        withCredentials: true});
     // console.log("Response from backend:", response.data);
     return response.data;
 };
 
 export const completedTask = async(id) => {
-    const response = await axios.patch(`${API_URL}/tasks/${id}`);
+    const response = await axios.patch(`${API_URL}/tasks/${id}`,{
+        withCredentials: true});
     // console.log("Response from backend:", response.data);
     return response.data;
 };
