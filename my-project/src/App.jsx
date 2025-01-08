@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import TaskList from "./TaskList";
 import InputField from "./InputField";
-import { CopilotKit } from "@copilotkit/react-core"; 
 import { CopilotPopup } from "@copilotkit/react-ui";
 import "@copilotkit/react-ui/styles.css";
-import { useCopilotReadable } from "@copilotkit/react-core"; 
+import { useCopilotReadable } from "@copilotkit/react-core";
 import {
   fetchTask,
   saveTask,
@@ -20,6 +19,12 @@ const App = () => {
   const [addTodo, setAddTodo] = useState([]);
 
   const userID = Cookies.get("userID");
+  
+  useCopilotReadable({
+    description: "The state of the todo list",
+    value:  JSON.stringify(addTodo)
+  });
+
   useEffect(() => {
     const getTasks = async () => {
       try {
@@ -33,15 +38,6 @@ const App = () => {
     getTasks();
   }, [userID]);
 
-
-
-  useCopilotReadable({
-    description: "The state of the todo list",
-    value: JSON.stringify(addTodo)
-  });
-
-
-  
   // const addButton = () => {
   //   if (todos.trim() !== "") {
   //     setAddTodo((prevTodo) => [
@@ -156,15 +152,13 @@ const App = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-8"  style={
-      {
-        "--copilot-kit-primary-color": "#000000"
-      } 
-    }>
-            <style>
-        {`.copilotKitDevConsole { display: none !important; }`}
-      </style>
-       <CopilotKit publicApiKey="ck_pub_8bbd49b5b226075af7b54c1e397c5751"> 
+    <div
+      className="max-w-2xl mx-auto p-8"
+      style={{
+        "--copilot-kit-primary-color": "#000000",
+      }}
+    >
+      <style>{`.copilotKitDevConsole { display: none !important; }`}</style>
       <InputField
         todos={todos}
         updateVal={(e) => setTodos(e.target.value)}
@@ -179,8 +173,7 @@ const App = () => {
         copyToClipboard={copyToClipboard}
         editTodo={editTodo}
       />
-      <CopilotPopup/>
-    </CopilotKit>
+      <CopilotPopup />
     </div>
   );
 };
