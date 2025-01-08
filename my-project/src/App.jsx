@@ -4,6 +4,7 @@ import InputField from "./InputField";
 import { CopilotKit } from "@copilotkit/react-core"; 
 import { CopilotPopup } from "@copilotkit/react-ui";
 import "@copilotkit/react-ui/styles.css";
+import { useCopilotReadable } from "@copilotkit/react-core"; 
 import {
   fetchTask,
   saveTask,
@@ -32,6 +33,15 @@ const App = () => {
     getTasks();
   }, [userID]);
 
+
+
+  useCopilotReadable({
+    description: "The state of the todo list",
+    value: JSON.stringify(addTodo)
+  });
+
+
+  
   // const addButton = () => {
   //   if (todos.trim() !== "") {
   //     setAddTodo((prevTodo) => [
