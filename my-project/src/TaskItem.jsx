@@ -29,7 +29,7 @@ const TaskItem = ({ todo, delButton, upperCaseOne, toggleComplete, index, copyTo
         ? 'opacity-100 translate-y-0'
         : 'opacity-0 translate-y-4'
     } hover:scale-105`} 
-    style={{ transitionDuration: '500ms', transitionTimingFunction: 'ease-out' }}
+    style={{ transitionDuration: '400ms', transitionTimingFunction: 'ease-out' }}
   >
       <input
         type="checkbox"

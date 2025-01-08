@@ -148,9 +148,12 @@ const App = () => {
   return (
     <div className="max-w-2xl mx-auto p-8"  style={
       {
-        "--copilot-kit-primary-color": "#000000",
+        "--copilot-kit-primary-color": "#000000"
       } 
     }>
+            <style>
+        {`.copilotKitDevConsole { display: none !important; }`}
+      </style>
        <CopilotKit publicApiKey="ck_pub_8bbd49b5b226075af7b54c1e397c5751"> 
       <InputField
         todos={todos}
@@ -166,7 +169,7 @@ const App = () => {
         copyToClipboard={copyToClipboard}
         editTodo={editTodo}
       />
-      <CopilotPopup />
+      <CopilotPopup/>
     </CopilotKit>
     </div>
   );
