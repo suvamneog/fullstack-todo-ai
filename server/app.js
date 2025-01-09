@@ -6,6 +6,9 @@ const connectDB = require("./db");
 const taskRoutes = require("./routes/tasks");
 require("dotenv").config();
 
+// Import CopilotKit
+const { CopilotRuntime, AnthropicAdapter, copilotRuntimeNodeHttpEndpoint } = require('@copilotkit/runtime');
+
 const app = express();
 
 // Middleware
@@ -32,24 +35,37 @@ app.use("/", (req, res, next) => {
   }
   next();
 });
+
 // Connect to database
 connectDB();
 
+// Copilot Runtime Setup
+const serviceAdapter = new AnthropicAdapter();
+
+app.use('/copilotkit', (req, res, next) => {
+  const runtime = new CopilotRuntime();
+  const handler = copilotRuntimeNodeHttpEndpoint({
+    endpoint: '/copilotkit',
+    runtime,
+    serviceAdapter,
+  });
+
+  return handler(req, res, next);
+});
+
+// Routes
 app.get("/", (req, res) => {
   res.redirect("/tasks");
 });
-// Routes
+
 app.use("/tasks", taskRoutes);
 
+// You can uncomment the below lines for logging purposes
 // app.use((req, res, next) => {
 //     console.log(`Incoming Request: ${req.method} ${req.url}`);
 //     console.log("Body:", req.body);
 //     console.log("Cookies:", req.cookies);
 //     next();
-//   });
-
-app.get("/", (req, res) => {
-  res.redirect("/tasks");
-});
+// });
 
 module.exports = app;

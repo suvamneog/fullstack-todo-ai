@@ -3,7 +3,7 @@ import TaskList from "./TaskList";
 import InputField from "./InputField";
 import { CopilotPopup } from "@copilotkit/react-ui";
 import "@copilotkit/react-ui/styles.css";
-import { useCopilotReadable } from "@copilotkit/react-core";
+import { useCopilotReadable, useCopilotAction } from "@copilotkit/react-core";
 import {
   fetchTask,
   saveTask,
@@ -25,6 +25,43 @@ const App = () => {
     value:  JSON.stringify(addTodo)
   });
 
+
+
+  useCopilotAction({
+    name: "getTasks",
+    description: "Sets the status of a task",
+    parameters: [
+      {
+        name: "id",
+        type: "string",
+        description: "The ID of the task",
+        required: true,
+      },
+      {
+        name: "addButton",
+        type: "string",
+        description: "The status of the task (completed/incomplete)",
+        enum: ['true', 'false'],
+        required: true,
+      },
+    ],
+    handler: ({ id, status }) => {
+      // Update task status (true for completed, false for incomplete)
+      addButton(id, status === 'true');
+    },
+  });
+  
+
+
+
+
+
+
+
+
+
+
+
   useEffect(() => {
     const getTasks = async () => {
       try {
@@ -37,6 +74,7 @@ const App = () => {
     };
     getTasks();
   }, [userID]);
+      
 
   // const addButton = () => {
   //   if (todos.trim() !== "") {
@@ -173,7 +211,12 @@ const App = () => {
         copyToClipboard={copyToClipboard}
         editTodo={editTodo}
       />
-      <CopilotPopup />
+      <CopilotPopup 
+      nstructions={"You are assisting the user as best as you can. Answer in the best way possible given the data you have."}
+      labels={{
+        title: "Popup Assistant",
+        initial: "Need any help?",
+      }} />
     </div>
   );
 };
