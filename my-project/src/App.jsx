@@ -17,26 +17,15 @@ import Cookies from "js-cookie";
 const App = () => {
   const [todos, setTodos] = useState("");
   const [addTodo, setAddTodo] = useState([]);
-  const [quotaExceeded, setQuotaExceeded] = useState(false); // State to check if quota is exceeded
+
   const userID = Cookies.get("userID");
-
-  // Fetch quota usage
-  useEffect(() => {
-    fetch("/api/usage")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.remaining === 0) {
-          setQuotaExceeded(true); // Set the state to true if quota is 0
-        }
-      });
-  }, []);
-
+  
   useCopilotReadable({
     description: "The state of the todo list",
-    value: JSON.stringify(addTodo),
+    value:  JSON.stringify(addTodo)
   });
 
-  // CopilotKit action for adding a task
+
   useCopilotAction({
     name: "addTask",
     description: "Add a new task to the to-do list",
@@ -49,7 +38,7 @@ const App = () => {
       },
     ],
     handler: async ({ task }) => {
-      if (task.trim() !== "" && !quotaExceeded) { // Disable if quota is exceeded
+      if (task.trim() !== "") {
         const newData = {
           userID,
           task,
@@ -61,44 +50,128 @@ const App = () => {
         } catch (error) {
           console.error("Error adding task:", error);
         }
-      } else if (quotaExceeded) {
-        alert("Quota exceeded! Upgrade your plan to use CopilotKit.");
       }
     },
   });
-
-  // CopilotKit action for deleting a task
   useCopilotAction({
-    name: "deleteTask",
-    description: "Delete a task from the to-do list",
-    parameters: [
-      {
-        name: "id",
-        type: "string",
-        description: "The ID of the task to be deleted",
-        required: true,
-      },
-    ],
-    handler: async ({ id }) => {
-      if (!quotaExceeded) { // Disable if quota is exceeded
-        try {
-          await delTask(id);
-          setAddTodo((prevTodo) => prevTodo.filter((todo) => todo.id !== id));
-        } catch (error) {
-          console.error("Error deleting task:", error);
-        }
-      } else if (quotaExceeded) {
-        alert("Quota exceeded! Upgrade your plan to use CopilotKit.");
-      }
+  name: "deleteTask",
+  description: "Delete a task from the to-do list",
+  parameters: [
+    {
+      name: "id",
+      type: "string",
+      description: "The ID of the task to be deleted",
+      required: true,
     },
-  });
+  ],
+  handler: async ({ id }) => {
+    try {
+      await delTask(id);
+      setAddTodo((prevTodo) => prevTodo.filter((todo) => todo.id !== id));
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  },
+});
 
-  // Other CopilotKit actions...
+useCopilotAction({
+  name: "uppercaseTask",
+  description: "Convert a task to uppercase",
+  parameters: [
+    {
+      name: "id",
+      type: "string",
+      description: "The ID of the task to convert",
+      required: true,
+    },
+    {
+      name: "task",
+      type: "string",
+      description: "The task to be converted to uppercase",
+      required: true,
+    },
+  ],
+  handler: async ({ id, task }) => {
+    try {
+      const upperCaseTask = await upperTask(id, task);
+      setAddTodo((prevTodo) =>
+        prevTodo.map((todo) =>
+          todo.id === id ? { ...todo, task: upperCaseTask.task } : todo
+        )
+      );
+    } catch (error) {
+      console.error("Error converting task to uppercase:", error);
+    }
+  },
+});
+
+useCopilotAction({
+  name: "updateTask",
+  description: "Update the content of a task",
+  parameters: [
+    {
+      name: "id",
+      type: "string",
+      description: "The ID of the task to update",
+      required: true,
+    },
+    {
+      name: "task",
+      type: "string",
+      description: "The new content for the task",
+      required: true,
+    },
+  ],
+  handler: async ({ id, task }) => {
+    try {
+      const updateTask = await updatedTask(id, task);
+      setAddTodo((prevTodo) =>
+        prevTodo.map((todo) =>
+          todo.id === id ? { ...todo, task: updateTask.task } : todo
+        )
+      );
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
+  },
+});
+  
+useCopilotAction({
+  name: "toggleTaskCompletion",
+  description: "Toggles the completion status of a task. Sets completed to true when checked, otherwise false.",
+  parameters: [
+    {
+      name: "id",
+      type: "string",
+      description: "The ID of the task to be toggled.",
+      required: true,
+    },
+    {
+      name: "checked",
+      type: "boolean",
+      description: "Whether the task is checked (true for completed, false for incomplete).",
+      required: true,
+    },
+  ],
+  handler: async ({ id, checked }) => {
+    try {
+      const updatedTask = await completedTask(id, checked); // Pass new completed state to the backend
+      setAddTodo((prev) =>
+        prev.map((todo) =>
+          todo.id === id ? { ...todo, completed: updatedTask.completed } : todo
+        )
+      );
+    } catch (error) {
+      console.error("Error toggling task completion:", error);
+    }
+  },
+});
 
   useEffect(() => {
     const getTasks = async () => {
       try {
         const tasks = await fetchTask();
+        // console.log("Fetched tasks:", tasks);
         setAddTodo(tasks);
       } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -106,9 +179,21 @@ const App = () => {
     };
     getTasks();
   }, [userID]);
+      
 
+  // const addButton = () => {
+  //   if (todos.trim() !== "") {
+  //     setAddTodo((prevTodo) => [
+  //       ...prevTodo,
+  //       { task: todos, id: uuidv4(), completed: false },
+  //     ]);
+  //     setTodos("");
+  //   }
+  // };
+
+  //ADD
   const addButton = async () => {
-    if (todos.trim() !== "" && userID && !quotaExceeded) { // Disable if quota is exceeded
+    if (todos.trim() !== "" && userID) {
       const newData = {
         userID: userID,
         task: todos,
@@ -116,16 +201,21 @@ const App = () => {
       };
       try {
         const savedTask = await saveTask(newData);
+
         setAddTodo((prevTodo) => [...prevTodo, savedTask]);
+
         setTodos("");
       } catch (error) {
         console.error("Error adding task:", error);
       }
-    } else if (quotaExceeded) {
-      alert("Quota exceeded! Upgrade your plan to use CopilotKit.");
     }
   };
 
+  // const delButton = (id) => {
+  //   setAddTodo((prevTodo) => prevTodo.filter((todo) => todo.id !== id));
+  // };
+
+  //DELETE
   const delButton = async (id) => {
     try {
       const deletedTask = await delTask(id);
@@ -136,6 +226,7 @@ const App = () => {
     }
   };
 
+  //UPPERCASE
   const upperCaseOne = async (id, task) => {
     try {
       const upperCaseTask = await upperTask(id, task);
@@ -144,11 +235,21 @@ const App = () => {
           todo.id === id ? { ...todo, task: upperCaseTask.task } : todo
         )
       );
+      // console.log(upperCaseTask);
     } catch (error) {
       console.error("Error uppercase task:", error);
     }
   };
 
+  // const toggleComplete = (id) => {
+  //   setAddTodo((prevTodo) =>
+  //     prevTodo.map((todo) =>
+  //       todo.id === id ? { ...todo, completed: !todo.completed } : todo
+  //     )
+  //   );
+  // }
+
+  //COMPLETED
   const toggleComplete = async (id) => {
     try {
       const updateTask = await completedTask(id);
@@ -157,17 +258,28 @@ const App = () => {
           todo.id === id ? { ...todo, completed: updateTask.completed } : todo
         )
       );
+      // console.log(updateTask);
     } catch (error) {
       console.error("Error uppercase task:", error);
     }
   };
 
+  //COPY
   const copyToClipboard = (task) => {
     navigator.clipboard.writeText(task).catch((err) => {
       console.error("Failed to copy: ", err);
     });
   };
 
+  // const editTodo = (id, newTask) => {
+  //   setAddTodo((prevTodo) =>
+  //     prevTodo.map((todo) =>
+  //       todo.id === id ? { ...todo, task: newTask } : todo
+  //     )
+  //   );
+  // };
+
+  //EDIT
   const editTodo = async (id, task) => {
     try {
       const updateTask = await updatedTask(id, task);
@@ -176,6 +288,7 @@ const App = () => {
           todo.id === id ? { ...todo, task: updateTask.task } : todo
         )
       );
+      // console.log(updateTask);
     } catch (error) {
       console.error("Error update task:", error);
     }
@@ -203,13 +316,12 @@ const App = () => {
         copyToClipboard={copyToClipboard}
         editTodo={editTodo}
       />
-      <CopilotPopup
-        instructions={"You are assisting the user as best as you can. Answer in the best way possible given the data you have."}
-        labels={{
-          title: "Popup Assistant",
-          initial: "Need any help?",
-        }}
-      />
+      <CopilotPopup 
+      nstructions={"You are assisting the user as best as you can. Answer in the best way possible given the data you have."}
+      labels={{
+        title: "Popup Assistant",
+        initial: "Need any help?",
+      }} />
     </div>
   );
 };

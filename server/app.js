@@ -44,11 +44,15 @@ const serviceAdapter = new OpenAIAdapter({
   model: 'gpt-3.5-turbo', // Specify the model explicitly
 });
 
-const runtime = new CopilotRuntime();
-const handler = copilotRuntimeNodeHttpEndpoint({
-  endpoint: '/copilotkit',
-  runtime,
-  serviceAdapter,
+app.use('/copilotkit', (req, res, next) => {
+  const runtime = new CopilotRuntime();
+  const handler = copilotRuntimeNodeHttpEndpoint({
+    endpoint: '/copilotkit',
+    runtime,
+    serviceAdapter,
+  });
+
+  return handler(req, res, next);
 });
 
 // Routes
@@ -58,40 +62,5 @@ app.get("/", (req, res) => {
 
 app.use("/tasks", taskRoutes);
 
-const UserApiUsage = require("./models/userApiUsage");
-
-app.use("/copilotkit", async (req, res, next) => {
-  const userID = req.cookies.userID;
-
-  // Fetch user's usage data
-  let userUsage = await UserApiUsage.findOne({ userID });
-
-  // If no record exists, create one
-  if (!userUsage) {
-    userUsage = new UserApiUsage({ userID });
-    await userUsage.save();
-  }
-
-  // Reset quota if a new period has started (e.g., monthly reset)
-  const now = new Date();
-  const resetPeriod = 30 * 24 * 60 * 60 * 1000; // Monthly reset
-  if (now - userUsage.lastReset > resetPeriod) {
-    userUsage.requests = 0;
-    userUsage.lastReset = now;
-    await userUsage.save();
-  }
-
-  // Check if the user has exceeded the quota
-  if (userUsage.requests >= userUsage.maxQuota) {
-    return res.status(429).json({ error: "Quota exceeded. Upgrade your plan to continue." });
-  }
-
-  // Increment the request count
-  userUsage.requests += 1;
-  await userUsage.save();
-
-  // Proceed to the CopilotKit endpoint if quota not exceeded
-  handler(req, res, next);
-});
 
 module.exports = app;
