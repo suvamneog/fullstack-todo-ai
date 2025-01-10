@@ -26,31 +26,167 @@ const App = () => {
   });
 
 
-
   useCopilotAction({
-    name: "getTasks",
-    description: "Sets the status of a task",
+    name: "addTask",
+    description: "Add a new task to the to-do list",
     parameters: [
       {
-        name: "id",
+        name: "task",
         type: "string",
-        description: "The ID of the task",
-        required: true,
-      },
-      {
-        name: "addButton",
-        type: "string",
-        description: "The status of the task (completed/incomplete)",
-        enum: ['true', 'false'],
+        description: "The task to be added",
         required: true,
       },
     ],
-    handler: ({ id, status }) => {
-      // Update task status (true for completed, false for incomplete)
-      addButton(id, status === 'true');
+    handler: async ({ task }) => {
+      if (task.trim() !== "") {
+        const newData = {
+          userID,
+          task,
+          completed: false,
+        };
+        try {
+          const savedTask = await saveTask(newData);
+          setAddTodo((prevTodo) => [...prevTodo, savedTask]);
+        } catch (error) {
+          console.error("Error adding task:", error);
+        }
+      }
     },
   });
+  useCopilotAction({
+  name: "deleteTask",
+  description: "Delete a task from the to-do list",
+  parameters: [
+    {
+      name: "id",
+      type: "string",
+      description: "The ID of the task to be deleted",
+      required: true,
+    },
+  ],
+  handler: async ({ id }) => {
+    try {
+      await delTask(id);
+      setAddTodo((prevTodo) => prevTodo.filter((todo) => todo.id !== id));
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  },
+});
+
+useCopilotAction({
+  name: "deleteTask",
+  description: "Delete a task from the to-do list",
+  parameters: [
+    {
+      name: "id",
+      type: "string",
+      description: "The ID of the task to be deleted",
+      required: true,
+    },
+  ],
+  handler: async ({ id }) => {
+    try {
+      await delTask(id);
+      setAddTodo((prevTodo) => prevTodo.filter((todo) => todo.id !== id));
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  },
+});
+
+useCopilotAction({
+  name: "uppercaseTask",
+  description: "Convert a task to uppercase",
+  parameters: [
+    {
+      name: "id",
+      type: "string",
+      description: "The ID of the task to convert",
+      required: true,
+    },
+    {
+      name: "task",
+      type: "string",
+      description: "The task to be converted to uppercase",
+      required: true,
+    },
+  ],
+  handler: async ({ id, task }) => {
+    try {
+      const upperCaseTask = await upperTask(id, task);
+      setAddTodo((prevTodo) =>
+        prevTodo.map((todo) =>
+          todo.id === id ? { ...todo, task: upperCaseTask.task } : todo
+        )
+      );
+    } catch (error) {
+      console.error("Error converting task to uppercase:", error);
+    }
+  },
+});
+
+useCopilotAction({
+  name: "updateTask",
+  description: "Update the content of a task",
+  parameters: [
+    {
+      name: "id",
+      type: "string",
+      description: "The ID of the task to update",
+      required: true,
+    },
+    {
+      name: "task",
+      type: "string",
+      description: "The new content for the task",
+      required: true,
+    },
+  ],
+  handler: async ({ id, task }) => {
+    try {
+      const updateTask = await updatedTask(id, task);
+      setAddTodo((prevTodo) =>
+        prevTodo.map((todo) =>
+          todo.id === id ? { ...todo, task: updateTask.task } : todo
+        )
+      );
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
+  },
+});
   
+useCopilotAction({
+  name: "toggleTaskCompletion",
+  description: "Toggles the completion status of a task. Sets completed to true when checked, otherwise false.",
+  parameters: [
+    {
+      name: "id",
+      type: "string",
+      description: "The ID of the task to be toggled.",
+      required: true,
+    },
+    {
+      name: "checked",
+      type: "boolean",
+      description: "Whether the task is checked (true for completed, false for incomplete).",
+      required: true,
+    },
+  ],
+  handler: async ({ id, checked }) => {
+    try {
+      const updatedTask = await completedTask(id, checked); // Pass new completed state to the backend
+      setAddTodo((prev) =>
+        prev.map((todo) =>
+          todo.id === id ? { ...todo, completed: updatedTask.completed } : todo
+        )
+      );
+    } catch (error) {
+      console.error("Error toggling task completion:", error);
+    }
+  },
+});
 
 
 

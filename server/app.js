@@ -7,7 +7,7 @@ const taskRoutes = require("./routes/tasks");
 require("dotenv").config();
 
 // Import CopilotKit
-const { CopilotRuntime, AnthropicAdapter, copilotRuntimeNodeHttpEndpoint } = require('@copilotkit/runtime');
+const { CopilotRuntime, OpenAIAdapter, copilotRuntimeNodeHttpEndpoint } = require('@copilotkit/runtime');
 
 const app = express();
 
@@ -40,7 +40,10 @@ app.use("/", (req, res, next) => {
 connectDB();
 
 // Copilot Runtime Setup
-const serviceAdapter = new AnthropicAdapter();
+const serviceAdapter = new OpenAIAdapter({
+  apiKey: 'your_openai_api_key', // Replace with your OpenAI API key
+  model: 'gpt-3.5-turbo', // Specify the model explicitly
+});
 
 app.use('/copilotkit', (req, res, next) => {
   const runtime = new CopilotRuntime();
