@@ -41,7 +41,6 @@ connectDB();
 
 // Copilot Runtime Setup
 const serviceAdapter = new OpenAIAdapter({
-  apiKey: 'your_openai_api_key', // Replace with your OpenAI API key
   model: 'gpt-3.5-turbo', // Specify the model explicitly
 });
 
