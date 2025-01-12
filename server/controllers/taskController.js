@@ -20,10 +20,6 @@ const saveTask = async (req, res) => {
   const { task } = req.body;
   const userID = req.cookies.userID;
 
-  if (!task || task.trim() === "") {
-    return res.status(400).send({ message: "Task content is required." });
-  }
-
   try {
     const newTask = await dataModel.create({ task, userID, completed: false });
     console.log("Task saved:", { task, userID });
