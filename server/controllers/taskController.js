@@ -1,86 +1,127 @@
 const dataModel = require("../models/Data");
 
-//showAll
+// Show all tasks
 const getTask = async (req, res) => {
-    const userID = req.cookies.userID;
-    try {
-  const tasks = await dataModel.find({userID});
-  res.send(tasks);
-}
-catch (error) {
-    res.status(500).send({ message: "Error fetching tasks", error });
-  }
-};
-
-//add & save
-const saveTask = async (req, res) => {
-  let { task, id } = req.body;
   const userID = req.cookies.userID;
-  const newTask = await dataModel.create({ task, userID, completed: false});
-    console.log("task saved");
-    console.log({ task, userID});
-    res.send(newTask);
-  };
+  if (!userID) {
+    return res.status(400).send({ message: "User ID is missing in cookies." });
+  }
 
-//update
+  try {
+    const tasks = await dataModel.find({ userID });
+    if (!tasks.length) {
+      return res.status(404).send({ message: "No tasks found for this user." });
+    }
+    res.send(tasks);
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching tasks", error: error.message });
+  }
+};
+
+// Add & save a new task
+const saveTask = async (req, res) => {
+  const { task } = req.body;
+  const userID = req.cookies.userID;
+
+  if (!userID) {
+    return res.status(400).send({ message: "User ID is missing in cookies." });
+  }
+
+  if (!task || task.trim() === "") {
+    return res.status(400).send({ message: "Task content is required." });
+  }
+
+  try {
+    const newTask = await dataModel.create({ task, userID, completed: false });
+    console.log("Task saved:", { task, userID });
+    res.status(201).send(newTask);
+  } catch (error) {
+    res.status(500).send({ message: "Error saving task", error: error.message });
+  }
+};
+
+// Update a task
 const updateTask = async (req, res) => {
-  let { task } = req.body;
+  const { task } = req.body;
   const { id } = req.params;
-  // console.log("Updating task with taskID:", id, "and task:", task);
-  const updatedTask = await dataModel.findOneAndUpdate(
-    { id },
-    { task },
-    { new: true }
-  );
-  if (!updatedTask) {
-    return res.status(404).send({ message: "Task not found." });
+
+  if (!task || task.trim() === "") {
+    return res.status(400).send({ message: "Task content is required to update." });
   }
-  res.send(updatedTask);
-  console.log(updatedTask);
+
+  try {
+    const updatedTask = await dataModel.findOneAndUpdate(
+      { id },
+      { task },
+      { new: true }
+    );
+    if (!updatedTask) {
+      return res.status(404).send({ message: "Task not found." });
+    }
+    res.send(updatedTask);
+  } catch (error) {
+    res.status(500).send({ message: "Error updating task", error: error.message });
+  }
 };
 
-//uppercase
+// Convert task content to uppercase
 const upperCaseTask = async (req, res) => {
-  console.log(req.body);
   const { id } = req.params;
-  let { task } = req.body;
-  const newTask = await dataModel.findOneAndUpdate(
-    { id },
-    { $set: { task: task.toUpperCase()} },
-    { new: true }
-  );
-  if (!newTask) {
-    return res.status(404).send({ message: "Task not found." });
+  const { task } = req.body;
+
+  if (!task || task.trim() === "") {
+    return res.status(400).send({ message: "Task content is required to update." });
   }
-  res.send(newTask);
-  console.log(newTask);
+
+  try {
+    const newTask = await dataModel.findOneAndUpdate(
+      { id },
+      { $set: { task: task.toUpperCase() } },
+      { new: true }
+    );
+    if (!newTask) {
+      return res.status(404).send({ message: "Task not found." });
+    }
+    res.send(newTask);
+  } catch (error) {
+    res.status(500).send({ message: "Error updating task", error: error.message });
+  }
 };
 
-//delete
+// Delete a task
 const deleteTask = async (req, res) => {
   const { id } = req.params;
-  const delTask = await dataModel.findOneAndDelete({ id });
-  if (!delTask) {
-    return res.status(404).send({ message: "Task not found." });
+
+  try {
+    const delTask = await dataModel.findOneAndDelete({ id });
+    if (!delTask) {
+      return res.status(404).send({ message: "Task not found." });
+    }
+    res.send(delTask);
+  } catch (error) {
+    res.status(500).send({ message: "Error deleting task", error: error.message });
   }
-  res.send(delTask);
-  console.log(delTask);
 };
 
-
+// Mark task as completed or incomplete
 const completedTask = async (req, res) => {
   const { id } = req.params;
-  const task = await dataModel.findOne({ id });
-  const updatedTask = await dataModel.findOneAndUpdate(
-    { id },
-    {completed: !task.completed},
-    { new: true }
-  );
-  if (!updatedTask) {
-    return res.status(404).send({ message: "Task not found." });
+
+  try {
+    const task = await dataModel.findOne({ id });
+    if (!task) {
+      return res.status(404).send({ message: "Task not found." });
+    }
+
+    const updatedTask = await dataModel.findOneAndUpdate(
+      { id },
+      { completed: !task.completed },
+      { new: true }
+    );
+    res.send(updatedTask);
+  } catch (error) {
+    res.status(500).send({ message: "Error updating task completion status", error: error.message });
   }
-  res.send(updatedTask);
-  console.log(updatedTask);
 };
 
 module.exports = {

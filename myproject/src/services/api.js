@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = "https://fullstack-todo-ai.onrender.com";
+const API_URL = "http://localhost:3001";
 
 export const fetchTask = async () => {
     const response = await axios.get(`${API_URL}/tasks`, {

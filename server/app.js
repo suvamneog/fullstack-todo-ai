@@ -14,7 +14,7 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: ["https://fullstack-todo-ai.vercel.app"],
+    origin: ["http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
@@ -29,8 +29,7 @@ app.use("/", (req, res, next) => {
   if (!userID) {
     userID = uuidv4();
     res.cookie("userID", userID, {
-      httpOnly: true,
-      sameSite: "none",
+      httpOnly: false,
       maxAge: 5 * 24 * 60 * 60 * 1000,
     });
   }
