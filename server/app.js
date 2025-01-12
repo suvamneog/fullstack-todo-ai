@@ -29,7 +29,8 @@ app.use("/", (req, res, next) => {
   if (!userID) {
     userID = uuidv4();
     res.cookie("userID", userID, {
-      httpOnly: false,
+      httpOnly: true,
+      sameSite: "none",
       maxAge: 5 * 24 * 60 * 60 * 1000,
     });
   }
