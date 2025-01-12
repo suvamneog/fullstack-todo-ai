@@ -6,43 +6,24 @@ const connectDB = require("./db");
 const taskRoutes = require("./routes/tasks");
 require("dotenv").config();
 
-// Import CopilotKit
 const { CopilotRuntime, OpenAIAdapter, copilotRuntimeNodeHttpEndpoint } = require('@copilotkit/runtime');
 
 const app = express();
 
-app.use(function (req, res, next) {
-  // Read allowed origins from the .env file
-  const allowedOrigins = [process.env.FRONTEND_URL, process.env.BACKEND_URL];
-  const origin = req.headers.origin;
+// Use CORS middleware first
+app.use(cors({
+  origin: [process.env.FRONTEND_URL, process.env.BACKEND_URL],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
+}));
 
-  // If the origin is allowed, set the header
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-  }
-
-  // Allow credentials, headers, and methods
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.header("Access-Control-Allow-Credentials", true);
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-
-  // Handle preflight (OPTIONS) requests
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
-  next();
-});
-
-
-
+// Parse cookies and JSON
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// UserID middleware
 app.use("/", (req, res, next) => {
   let userID = req.cookies.userID;
   if (!userID) {
@@ -50,19 +31,21 @@ app.use("/", (req, res, next) => {
     res.cookie("userID", userID, {
       httpOnly: false,
       maxAge: 5 * 24 * 60 * 60 * 1000,
+      sameSite: 'none',  // Important for cross-origin requests
+      secure: true,      // Required when sameSite is 'none'
+      path: '/'         // Ensure cookie is available for all paths
     });
   }
   next();
 });
-
 
 // Connect to database
 connectDB();
 
 // Copilot Runtime Setup
 const serviceAdapter = new OpenAIAdapter({
-  model: 'gpt-3.5-turbo', // Specify the model explicitly
-  key : process.env.OPENAI_API_KEY,
+  model: 'gpt-3.5-turbo',
+  key: process.env.OPENAI_API_KEY,
 });
 
 app.use('/copilotkit', (req, res, next) => {
@@ -72,7 +55,6 @@ app.use('/copilotkit', (req, res, next) => {
     runtime,
     serviceAdapter,
   });
-
   return handler(req, res, next);
 });
 
@@ -82,6 +64,5 @@ app.get("/", (req, res) => {
 });
 
 app.use("/tasks", taskRoutes);
-
 
 module.exports = app;
