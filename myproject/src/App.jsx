@@ -171,7 +171,7 @@ useCopilotAction({
     const getTasks = async () => {
       try {
         const tasks = await fetchTask();
-        // console.log("Fetched tasks:", tasks);
+        console.log("Fetched tasks:", tasks);
         setAddTodo(tasks);
       } catch (error) {
         console.error("Error fetching tasks:", error);
