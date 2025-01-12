@@ -20,10 +20,6 @@ const saveTask = async (req, res) => {
   const { task } = req.body;
   const userID = req.cookies.userID;
 
-  if (!userID) {
-    return res.status(400).send({ message: "User ID is missing in cookies." });
-  }
-
   if (!task || task.trim() === "") {
     return res.status(400).send({ message: "Task content is required." });
   }

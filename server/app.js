@@ -13,7 +13,7 @@ const app = express();
 
 app.use(function (req, res, next) {
   // Read allowed origins from the .env file
-  const allowedOrigins = [process.env.FRONTEND_URL, process.env.BACKEND_URL];
+  const allowedOrigins = [process.env.FRONTEND_URL, process.env.BACKEND_URL, `${process.env.BACKEND_URL}/copilotkit`];
   const origin = req.headers.origin;
 
   // If the origin is allowed, set the header
