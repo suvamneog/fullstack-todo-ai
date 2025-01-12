@@ -3,8 +3,10 @@ import App from './App.jsx'
 import './index.css'
 import { CopilotKit } from "@copilotkit/react-core"
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-    <CopilotKit runtimeUrl="https://fullstack-todo-ai-1.onrender.com/copilotkit">
-      <App />
+const runtimeUrl = `${import.meta.env.VITE_BACKEND_URL}/copilotkit`;
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+    <CopilotKit runtimeUrl={runtimeUrl}>
+        <App />
     </CopilotKit>
-)
+);
