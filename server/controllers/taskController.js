@@ -3,9 +3,6 @@ const dataModel = require("../models/Data");
 // Show all tasks
 const getTask = async (req, res) => {
   const userID = req.cookies.userID;
-  if (!userID) {
-    return res.status(400).send({ message: "User ID is missing in cookies." });
-  }
 
   try {
     const tasks = await dataModel.find({ userID });
