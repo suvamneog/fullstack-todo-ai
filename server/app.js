@@ -11,19 +11,22 @@ const { CopilotRuntime, OpenAIAdapter, copilotRuntimeNodeHttpEndpoint } = requir
 
 const app = express();
 
-
-app.use(function(req, res, next) {
-  const allowedOrigins = ["https://fullstack-todo-ai.vercel.app", "https://fullstack-todo-ai-1.onrender.com"];
+app.use(function (req, res, next) {
+  // Read allowed origins from the .env file
+  const allowedOrigins = [process.env.FRONTEND_URL, process.env.BACKEND_URL];
   const origin = req.headers.origin;
 
   // If the origin is allowed, set the header
   if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader("Access-Control-Allow-Origin", origin);
   }
 
   // Allow credentials, headers, and methods
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.header("Access-Control-Allow-credentials", true);
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header("Access-Control-Allow-Credentials", true);
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
 
   // Handle preflight (OPTIONS) requests
@@ -33,6 +36,7 @@ app.use(function(req, res, next) {
 
   next();
 });
+
 
 
 app.use(cookieParser());
