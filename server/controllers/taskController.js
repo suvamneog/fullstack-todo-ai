@@ -23,7 +23,7 @@ const saveTask = async (req, res) => {
   try {
     const newTask = await dataModel.create({ task, userID, completed: false });
     console.log("Task saved:", { task, userID });
-    res.status(201).send(newTask);
+    res.send(newTask);
   } catch (error) {
     res.status(500).send({ message: "Error saving task", error: error.message });
   }
