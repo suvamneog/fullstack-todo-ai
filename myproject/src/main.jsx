@@ -4,7 +4,7 @@ import './index.css'
 import { CopilotKit } from "@copilotkit/react-core"
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <CopilotKit runtimeUrl="http://localhost:3001/copilotkit">
+    <CopilotKit runtimeUrl="https://fullstack-todo-ai.onrender.com/copilotkit">
       <App />
     </CopilotKit>
 )
