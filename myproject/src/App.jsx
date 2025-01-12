@@ -200,9 +200,9 @@ useCopilotAction({
       };
       try {
         const savedTask = await saveTask(newData);
-
         setAddTodo((prevTodo) => [...prevTodo, savedTask]);
-
+        console.log("Data to be saved:", newData);
+        
         setTodos("");
       } catch (error) {
         console.error("Error adding task:", error);
