@@ -19,7 +19,6 @@ const getTask = async (req, res) => {
 const saveTask = async (req, res) => {
   const { task } = req.body;
   const userID = req.cookies.userID;
-  console.log(userID);
 
   if (!userID) {
     return res.status(400).send({ message: "User ID is missing in cookies." });
