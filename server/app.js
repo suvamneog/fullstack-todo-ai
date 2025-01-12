@@ -24,15 +24,25 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/", (req, res, next) => {
-  let userID = req.cookies.userID;
-  if (!userID) {
-    userID = uuidv4();
-    res.cookie("userID", userID, {
-      httpOnly: false,
-      maxAge: 5 * 24 * 60 * 60 * 1000,
-    });
+app.use(function(req, res, next) {
+  const allowedOrigins = ["https://fullstack-todo-ai.vercel.app", "https://fullstack-todo-ai-1.onrender.com"];
+  const origin = req.headers.origin;
+
+  // If the origin is allowed, set the header
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
   }
+
+  // Allow credentials, headers, and methods
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-credentials", true);
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+
+  // Handle preflight (OPTIONS) requests
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
   next();
 });
 
