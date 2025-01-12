@@ -11,18 +11,6 @@ const { CopilotRuntime, OpenAIAdapter, copilotRuntimeNodeHttpEndpoint } = requir
 
 const app = express();
 
-// Middleware
-app.use(
-  cors({
-    origin: ["https://fullstack-todo-ai.vercel.app"],
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    credentials: true,
-  })
-);
-
-app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 app.use(function(req, res, next) {
   const allowedOrigins = ["https://fullstack-todo-ai.vercel.app", "https://fullstack-todo-ai-1.onrender.com"];
@@ -45,6 +33,24 @@ app.use(function(req, res, next) {
 
   next();
 });
+
+
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/", (req, res, next) => {
+  let userID = req.cookies.userID;
+  if (!userID) {
+    userID = uuidv4();
+    res.cookie("userID", userID, {
+      httpOnly: false,
+      maxAge: 5 * 24 * 60 * 60 * 1000,
+    });
+  }
+  next();
+});
+
 
 // Connect to database
 connectDB();
