@@ -24,8 +24,6 @@ const corsOptions = {
 app.use(cors(corsOptions)); // Enable CORS for your API
 
 
-
-
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -37,6 +35,7 @@ app.use("/", (req, res, next) => {
     res.cookie("userID", userID, {
       httpOnly: false,
       maxAge: 5 * 24 * 60 * 60 * 1000,
+      secure: true,
     });
   }
   next();
