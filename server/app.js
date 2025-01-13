@@ -16,13 +16,13 @@ const {
 const app = express();
 
 const corsOptions = {
-  origin: "https://fullstack-todo-ai-1.onrender.com", // Your frontend domain
-  methods: "GET, POST, PUT, DELETE, PATCH", // Allowed methods
-  allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization", // Allowed headers
-  credentials: true, // Allow cookies or authentication credentials
+  origin: 'https://fullstack-todo-ai.vercel.app', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  credentials: true, // If you're using cookies for authentication
 };
 
-app.use(cors(corsOptions));
+app.use(cors(corsOptions)); // Enable CORS for your API
+
 
 
 
@@ -36,6 +36,8 @@ app.use("/", (req, res, next) => {
     userID = uuidv4();
     res.cookie("userID", userID, {
       httpOnly: false,
+      secure: true, 
+      sameSite: "Lax",
       maxAge: 5 * 24 * 60 * 60 * 1000,
     });
   }
