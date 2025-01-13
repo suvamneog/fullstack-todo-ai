@@ -3,12 +3,8 @@ const dataModel = require("../models/Data");
 // Show all tasks
 const getTask = async (req, res) => {
   const userID = req.cookies.userID;
-
   try {
     const tasks = await dataModel.find({ userID });
-    if (!tasks.length) {
-      return res.status(404).send({ message: "No tasks found for this user." });
-    }
     res.send(tasks);
   } catch (error) {
     res.status(500).send({ message: "Error fetching tasks", error: error.message });
@@ -19,15 +15,6 @@ const getTask = async (req, res) => {
 const saveTask = async (req, res) => {
   const { task } = req.body;
   const userID = req.cookies.userID;
-
-  if (!userID) {
-    return res.status(400).send({ message: "User ID is missing in cookies." });
-  }
-
-  if (!task || task.trim() === "") {
-    return res.status(400).send({ message: "Task content is required." });
-  }
-
   try {
     const newTask = await dataModel.create({ task, userID, completed: false });
     console.log("Task saved:", { task, userID });
