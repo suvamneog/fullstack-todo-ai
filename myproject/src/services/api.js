@@ -1,5 +1,7 @@
 import axios from "axios";
-const API_URL = "";
+const API_URL = import.meta.env.MODE === 'production' 
+  ? "https://fullstack-todo-ai-1.onrender.com" // Production backend URL
+  : "/api"; //
 
 export const fetchTask = async () => {
     const response = await axios.get(`${API_URL}/tasks`, {

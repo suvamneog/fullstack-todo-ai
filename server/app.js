@@ -15,6 +15,15 @@ const {
 
 const app = express();
 
+const corsOptions = {
+  origin: 'https://fullstack-todo-ai.vercel.app', // Adjust to your frontend URL
+  credentials: true, // If you're using cookies for authentication
+};
+
+app.use(cors(corsOptions)); // Enable CORS for your API
+
+
+
 
 app.use(cookieParser());
 app.use(express.json());
