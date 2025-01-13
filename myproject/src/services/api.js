@@ -11,7 +11,6 @@ export const fetchTask = async () => {
 
 
 export const saveTask = async (taskData) => {
-    console.log("saveTask function triggered");
     const response = await axios.post(`${API_URL}/tasks`, taskData,  {
         withCredentials: true}  );
         // console.log("Response from backend:", response.data);
