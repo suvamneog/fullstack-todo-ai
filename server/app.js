@@ -16,9 +16,11 @@ const {
 const app = express();
 
 const corsOptions = {
-  origin: 'https://fullstack-todo-ai.vercel.app', 
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  credentials: true, // If you're using cookies for authentication
+  origin: "https://fullstack-todo-ai.vercel.app",
+  methods: ["GET", "PUT", "PATCH", "POST", "DELETE"],
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions)); // Enable CORS for your API
