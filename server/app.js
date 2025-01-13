@@ -16,7 +16,8 @@ const {
 const app = express();
 
 const corsOptions = {
-  origin: 'https://fullstack-todo-ai.vercel.app', // Adjust to your frontend URL
+  origin: 'https://fullstack-todo-ai.vercel.app', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true, // If you're using cookies for authentication
 };
 
