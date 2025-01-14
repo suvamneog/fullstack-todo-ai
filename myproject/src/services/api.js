@@ -1,49 +1,46 @@
 import axios from "axios";
-
-// Determine the API base URL based on the environment
-const API_URL = import.meta.env.MODE === "production"
+const API_URL = import.meta.env.MODE === 'production' 
   ? "https://fullstack-todo-ai-1.onrender.com" // Production backend URL
-  : "/api"; // Use proxy for development
+  : "/api"; //
 
-// Create an Axios instance with common configurations
-const apiClient = axios.create({
-  baseURL: API_URL,
-  withCredentials: true, // Include cookies in requests
-  headers: {
-    "Content-Type": "application/json", // Set default content type
-  },
-});
-
-// API functions using the Axios instance
 export const fetchTask = async () => {
-  const response = await apiClient.get("/tasks");
-  return response.data;
+    const response = await axios.get(`${API_URL}/tasks`, {
+        withCredentials: true}  );
+    return response.data;
 };
 
-export const saveTask = async (taskData) => {
-  const response = await apiClient.post("/tasks", taskData);
-  console.log("Response from backend:", response.data); // Log response for debugging
-  return response.data;
+
+export const saveTask = async (task) => {
+    const response = await axios.post(`${API_URL}/tasks`, task,  {
+        withCredentials: true}  );
+        console.log("Response from backend:", response.data);
+    return response.data;
 };
 
 export const delTask = async (id) => {
-  const response = await apiClient.delete(`/tasks/${id}`);
-  return response.data;
-};
+    const response = await axios.delete(`${API_URL}/tasks/${id}`, {
+        withCredentials: true}  );
+        // console.log("Response from backend:", response.data);
+    return response.data;
+    };
 
 export const upperTask = async (id, task) => {
-  const response = await apiClient.put(`/tasks/${id}/uppercase`, { task });
-  return response.data;
+          const response = await axios.put(`${API_URL}/tasks/${id}/uppercase`, { task: task },{
+            withCredentials: true});
+        //   console.log("Response from backend:", response.data);
+          return response.data;
+    };
+        
+export const updatedTask = async(id, task) => {
+    const response = await axios.put(`${API_URL}/tasks/${id}`, { task: task },{
+        withCredentials: true});
+    // console.log("Response from backend:", response.data);
+    return response.data;
 };
 
-export const updatedTask = async (id, task) => {
-  const response = await apiClient.put(`/tasks/${id}`, { task });
-  return response.data;
+export const completedTask = async(id) => {
+    const response = await axios.patch(`${API_URL}/tasks/${id}`,{
+        withCredentials: true});
+    // console.log("Response from backend:", response.data);
+    return response.data;
 };
-
-export const completedTask = async (id) => {
-  const response = await apiClient.patch(`/tasks/${id}`);
-  return response.data;
-};
-
-export default apiClient;
