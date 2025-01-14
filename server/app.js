@@ -21,7 +21,7 @@ const corsOptions = {
   credentials: true, // If you're using cookies for authentication
 };
 
-app.use(cors(corsOptions)); //cors settings
+app.use(cors(corsOptions)); //cors-settings
 
 
 app.use(cookieParser());
