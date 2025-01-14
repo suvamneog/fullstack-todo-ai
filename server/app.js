@@ -21,7 +21,7 @@ const corsOptions = {
   credentials: true, // If you're using cookies for authentication
 };
 
-app.use(cors(corsOptions)); //cors-settings
+app.use(cors(corsOptions)); //cors
 
 
 app.use(cookieParser());
@@ -44,7 +44,7 @@ app.use("/", (req, res, next) => {
 // Connect to database
 connectDB();
 
-// Copilot Runtime Setup
+// Copilot Runtime
 const serviceAdapter = new OpenAIAdapter({
   model: "gpt-3.5-turbo", // Specify the model explicitly
   key: process.env.OPENAI_API_KEY,
