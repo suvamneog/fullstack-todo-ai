@@ -15,6 +15,7 @@ const getTask = async (req, res) => {
 const saveTask = async (req, res) => {
   const userID = req.cookies.userID;
   const { task } = req.body;
+  console.log("Request received to save task:", { userID, task }); 
   try {
     const newTask = await dataModel.create({ task, userID, completed: false });
     console.log("Task saved:", { task, userID });
