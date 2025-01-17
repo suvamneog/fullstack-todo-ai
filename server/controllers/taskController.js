@@ -12,7 +12,7 @@ const getTask = async (req, res) => {
 };
 
 // Add & save a new task
-export const saveTask = async (taskData) => {
+const saveTask = async (taskData) => {
   console.log('Attempting to save task with data:', taskData);
   
   try {
