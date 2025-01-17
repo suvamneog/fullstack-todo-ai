@@ -9,11 +9,25 @@ export const fetchTask = async () => {
 
 
 export const saveTask = async (task) => {
-    const response = await axios.post(`${API_URL}/tasks`, task,  {
-        withCredentials: true}  );
-        console.log("Response from backend:", response.data);
-    return response.data;
-};
+    try {
+      const response = await axios.post(`${API_URL}/tasks`, task, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log("Response from backend:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error details:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      throw error;
+    }
+  };
+  
 
 export const delTask = async (id) => {
     const response = await axios.delete(`${API_URL}/tasks/${id}`, {
