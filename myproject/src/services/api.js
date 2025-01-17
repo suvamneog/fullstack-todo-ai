@@ -32,7 +32,7 @@ export const upperTask = async (id, task) => {
 export const updatedTask = async(id, task) => {
     const response = await axios.put(`${API_URL}/tasks/${id}`, { task: task },{
         withCredentials: true});
-    // console.log("Response from backend:", response.data);
+    console.log("Response from backend:", response.data);
     return response.data;
 };
 

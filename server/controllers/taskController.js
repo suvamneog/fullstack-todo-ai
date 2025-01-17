@@ -44,6 +44,7 @@ const updateTask = async (req, res) => {
       return res.status(404).send({ message: "Task not found." });
     }
     res.send(updatedTask);
+    console.log("Request received to save task:", {updateTask}); 
   } catch (error) {
     res.status(500).send({ message: "Error updating task", error: error.message });
   }

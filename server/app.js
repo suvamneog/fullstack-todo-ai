@@ -18,23 +18,24 @@ const app = express();
 const corsOptions = {
   origin: 'https://fullstack-todo-ai.vercel.app', 
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  credentials: true, // If you're using cookies for authentication
+  credentials: true, 
 };
 
-app.use(cors(corsOptions)); //cors
+app.use(cors(corsOptions)); 
 
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/", (req, res, next) => {
+app.use("/tasks", (req, res, next) => {
   let userID = req.cookies.userID;
   if (!userID) {
     userID = uuidv4();
     res.cookie("userID", userID, {
       httpOnly: false,
       maxAge: 5 * 24 * 60 * 60 * 1000,
+      sameSite: 'none',
       secure: true,
     });
   }
