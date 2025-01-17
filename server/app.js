@@ -40,7 +40,7 @@ app.use("/tasks", (req, res, next) => {
     });
   }
   next();
-});
+}, taskRoutes);
 
 // Connect to database
 connectDB();
@@ -67,6 +67,5 @@ app.get("/", (req, res) => {
   res.redirect("/tasks");
 });
 
-app.use("/tasks", taskRoutes);
 
 module.exports = app;
