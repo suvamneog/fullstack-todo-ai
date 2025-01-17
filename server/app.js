@@ -6,7 +6,7 @@ const connectDB = require("./db");
 const taskRoutes = require("./routes/tasks");
 require("dotenv").config();
 
-// CopilotKit
+// (ImportCopilotKit)
 const {
   CopilotRuntime,
   OpenAIAdapter,
@@ -15,32 +15,18 @@ const {
 
 const app = express();
 
-// CORS Options
 const corsOptions = {
-  origin: "https://fullstack-todo-ai-1.onrender.com",
+  origin: "https://fullstack-todo-ai.vercel.app",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  allowedHeaders: ["Content-Type"],
   credentials: true,
 };
 
-// Middleware
 app.use(cors(corsOptions));
+
 app.use(cookieParser());
-app.use(express.json()); // Body parsing middleware
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Logging Middleware (for debugging requests)
-app.use((req, res, next) => {
-  console.log(`[${req.method}] ${req.url}`);
-  console.log("Headers:", req.headers);
-  if (req.body) console.log("Body:", req.body);
-  next();
-});
-
-// Preflight CORS Handling for POST
-app.options("/tasks", cors(corsOptions)); // Explicitly handle preflight requests
-
-// Task Routes with Cookie Middleware
 app.use(
   "/tasks",
   (req, res, next) => {
@@ -59,12 +45,12 @@ app.use(
   taskRoutes
 );
 
-// Database Connection
+// Connect to database
 connectDB();
 
-// CopilotKit Integration
+// Copilot Runtime
 const serviceAdapter = new OpenAIAdapter({
-  model: "gpt-3.5-turbo",
+  model: "gpt-3.5-turbo", // Specify the model explicitly
   key: process.env.OPENAI_API_KEY,
 });
 
@@ -75,19 +61,13 @@ app.use("/copilotkit", (req, res, next) => {
     runtime,
     serviceAdapter,
   });
+
   return handler(req, res, next);
 });
 
-// Root Route
+// Routes
 app.get("/", (req, res) => {
   res.redirect("/tasks");
 });
 
-// Global Error Handler
-app.use((err, req, res, next) => {
-  console.error("Error:", err.message);
-  res.status(err.status || 500).json({ error: err.message || "Internal Server Error" });
-});
-
-// Export App
 module.exports = app;
