@@ -6,7 +6,7 @@ const connectDB = require("./db");
 const taskRoutes = require("./routes/tasks");
 require("dotenv").config();
 
-// (ImportCopilotKit)
+// (Import-CopilotKit)
 const {
   CopilotRuntime,
   OpenAIAdapter,
@@ -16,10 +16,9 @@ const {
 const app = express();
 
 const corsOptions = {
-  origin: true, // or specifically your frontend URL
+  origin: "https://fullstack-todo-ai.vercel.app",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use(cors(corsOptions));
