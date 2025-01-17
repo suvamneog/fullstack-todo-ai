@@ -193,23 +193,27 @@ useCopilotAction({
 
   //ADD
   const addButton = async () => {
+    console.log("addButton called"); // Debug log 1
     if (todos.trim() !== "" && userID) {
+      console.log("Conditions met, userID:", userID); // Debug log 2
       const newData = {
         userID: userID,
         task: todos,
         completed: false,
       };
+      console.log("Sending data:", newData); // Debug log 3
       try {
         const savedTask = await saveTask(newData);
-
+        console.log("Response from saveTask:", savedTask); // Debug log 4
+  
         setAddTodo((prevTodo) => [...prevTodo, savedTask]);
-
         setTodos("");
       } catch (error) {
         console.error("Error adding task:", error);
       }
     }
   };
+  
 
   // const delButton = (id) => {
   //   setAddTodo((prevTodo) => prevTodo.filter((todo) => todo.id !== id));
