@@ -12,18 +12,29 @@ const getTask = async (req, res) => {
 };
 
 // Add & save a new task
-const saveTask = async (req, res) => {
-  const userID = req.cookies.userID;
-  const { task } = req.body;
-  console.log("Request received to save task:", { userID, task }); 
+export const saveTask = async (taskData) => {
+  console.log('Attempting to save task with data:', taskData);
+  
   try {
-    const newTask = await dataModel.create({ task, userID, completed: false });
-    console.log("Task saved:", { task, userID });
-    res.status(201).send(newTask);
+    const response = await axios.post(`${API_URL}/tasks`, taskData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    console.log('Server response:', response);
+    return response.data;
   } catch (error) {
-    res.status(500).send({ message: "Error saving task", error: error.message });
+    console.error('Save task error details:', {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+      requestData: error.config?.data
+    });
+    throw error;
   }
 };
+
 
 // Update a task
 const updateTask = async (req, res) => {
