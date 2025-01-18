@@ -7,11 +7,11 @@ const todoSchema = new mongoose.Schema({
       id: {
         type: String,
         required: true, 
-       default: () => uuidv4() // Unique task identifier
+       default: () => uuidv4() // Unique-task identifier
       },
       task: {
         type: String,
-        required: true,  // Task description
+        required: true,  // Task-description
       },
       completed: {
         type: Boolean,
