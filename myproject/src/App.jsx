@@ -26,6 +26,21 @@ const App = () => {
   });
 
 
+  useEffect(() => {
+    const getTasks = async () => {
+      try {
+        const tasks = await fetchTask();
+        console.log("Fetched tasks:", tasks);
+        setAddTodo(tasks);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+    getTasks();
+  }, [userID]);
+      
+
+
   useCopilotAction({
     name: "addTask",
     description: "Add a new task to the to-do list",
@@ -167,19 +182,7 @@ useCopilotAction({
   },
 });
 
-  useEffect(() => {
-    const getTasks = async () => {
-      try {
-        const tasks = await fetchTask();
-        console.log("Fetched tasks:", tasks);
-        setAddTodo(tasks);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-      }
-    };
-    getTasks();
-  }, [userID]);
-      
+
 
   // const addButton = () => {
   //   if (todos.trim() !== "") {
