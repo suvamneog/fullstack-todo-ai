@@ -37,7 +37,7 @@ const App = () => {
       }
     };
     getTasks();
-  }, [userID]);
+  }, []);
       
 
 
