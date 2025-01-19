@@ -26,25 +26,19 @@ const App = () => {
   });
 
 
- useEffect(() => {
-  const getTasks = async () => {
-    try {
-      const userID = Cookies.get("userID"); // Retrieve cookie
-      if (!userID) {
-        console.error("UserID cookie is not set yet.");
-        return; // Exit if cookie is missing
+  useEffect(() => {
+    const getTasks = async () => {
+      try {
+        const tasks = await fetchTask();
+        console.log("Fetched tasks:", tasks);
+        setAddTodo(tasks);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
       }
-
-      const tasks = await fetchTask(); // Proceed with fetching tasks
-      console.log("Fetched tasks:", tasks);
-      setAddTodo(tasks);
-    } catch (error) {
-      console.error("Error fetching tasks:", error);
-    }
-  };
-
-  getTasks();
-}, []); // Remove userID as dependency to avoid unnecessary re-renders
+    };
+    getTasks();
+  }, []);
+      
 
 
   useCopilotAction({
