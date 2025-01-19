@@ -21,11 +21,7 @@ const corsOptions = {
   credentials: true,
 };
 
-// Enable CORS
-app.use(cors(corsOptions));
-
-// Preflight request handler
-app.options("*", cors(corsOptions)); // This ensures preflight requests are handled
+app.use(cors(corsOptions)); 
 
 app.use(cookieParser());
 app.use(express.json());
