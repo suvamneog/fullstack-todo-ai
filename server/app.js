@@ -34,7 +34,7 @@ app.use(
     if (!userID) {
       userID = uuidv4();
       res.cookie("userID", userID, {
-        httpOnly: false,
+        httpOnly: true,
         maxAge: 5 * 24 * 60 * 60 * 1000,
         sameSite: "none",
         secure: true,
