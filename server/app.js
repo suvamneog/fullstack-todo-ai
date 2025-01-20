@@ -39,6 +39,7 @@ app.use(
         sameSite: "none",
         secure: true,
       });
+      console.log("Set-Cookie header sent:", res.getHeaders());
     }
     next();
   },
