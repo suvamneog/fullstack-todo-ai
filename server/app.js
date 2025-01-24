@@ -35,6 +35,7 @@ const serviceAdapter = new OpenAIAdapter({
 })
 
 app.use("/copilotkit", (req, res, next) => {
+  console.log("Request received at /copilotkit", req.headers);
   const runtime = new CopilotRuntime()
   const handler = copilotRuntimeNodeHttpEndpoint({
     endpoint: "/copilotkit",
@@ -42,7 +43,7 @@ app.use("/copilotkit", (req, res, next) => {
     serviceAdapter,
   })
 
-  return handler(req, res, next)
+  return handler(req, res, next);
 })
 
 app.get("/", (req, res) => {
