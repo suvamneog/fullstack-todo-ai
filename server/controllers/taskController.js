@@ -4,10 +4,20 @@ const dataModel = require("../models/Data");
 const getTask = async (req, res) => {
   const userID = req.cookies.userID;
   try {
-    const tasks = await dataModel.find({ userID });
+    const tasks = await Promise.race([
+      dataModel.find({ userID }),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database operation timed out')), 5000)
+      )
+    ]);
     res.send(tasks);
   } catch (error) {
-    res.status(500).send({ message: "Error fetching tasks", error: error.message });
+    console.error('Error in getTask:', error);
+    res.status(500).send({ 
+      message: "Error fetching tasks", 
+      error: error.message,
+      details: "Please try again. If the problem persists, contact support."
+    });
   }
 };
 
@@ -15,12 +25,24 @@ const getTask = async (req, res) => {
 const saveTask = async (req, res) => {
   const userID = req.cookies.userID;
   const { task } = req.body;
-  console.log("Request received to save task:", { userID, task }); 
+  
+  console.log("Request body:", req.body);
+  console.log("Cookies received:", req.cookies);
+
+  if (!task || task.trim() === "") {
+    return res.status(400).send({ message: "Task content is required." });
+  }
+
+  if (!userID) {
+    return res.status(400).send({ message: "UserID is required. Please ensure cookies are enabled." });
+  }
+
   try {
     const newTask = await dataModel.create({ task, userID, completed: false });
-    console.log("Task saved:", { task, userID });
+    console.log("Task saved successfully:", newTask);
     res.status(201).send(newTask);
   } catch (error) {
+    console.error("Error saving task:", error);
     res.status(500).send({ message: "Error saving task", error: error.message });
   }
 };
