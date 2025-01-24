@@ -17,7 +17,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 
-// Add OPTIONS handling for preflight requests
+// Add OPTIONS handling for preflight requests(CORS)
 app.options("*", cors(corsOptions))
 
 app.use(express.json())
@@ -35,7 +35,7 @@ const serviceAdapter = new OpenAIAdapter({
 })
 
 app.use("/copilotkit", (req, res, next) => {
-  console.log("Request received at /copilotkit", req.headers);
+    console.log("Request received at /copilotkit", req.headers);
   const runtime = new CopilotRuntime()
   const handler = copilotRuntimeNodeHttpEndpoint({
     endpoint: "/copilotkit",
