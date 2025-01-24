@@ -1,136 +1,125 @@
-const dataModel = require("../models/Data");
+const dataModel = require("../models/Data")
 
 // Show all tasks
 const getTask = async (req, res) => {
-  const userID = req.cookies.userID;
+  const userID = req.headers["x-user-id"]
   try {
     const tasks = await Promise.race([
       dataModel.find({ userID }),
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Database operation timed out')), 5000)
-      )
-    ]);
-    res.send(tasks);
+      new Promise((_, reject) => setTimeout(() => reject(new Error("Database operation timed out")), 5000)),
+    ])
+    res.send(tasks)
   } catch (error) {
-    console.error('Error in getTask:', error);
-    res.status(500).send({ 
-      message: "Error fetching tasks", 
+    console.error("Error in getTask:", error)
+    res.status(500).send({
+      message: "Error fetching tasks",
       error: error.message,
-      details: "Please try again. If the problem persists, contact support."
-    });
+      details: "Please try again. If the problem persists, contact support.",
+    })
   }
-};
+}
 
 // Add & save a new task
 const saveTask = async (req, res) => {
-  const userID = req.cookies.userID;
-  const { task } = req.body;
-  
-  console.log("Request body:", req.body);
-  console.log("Cookies received:", req.cookies);
+  const userID = req.headers["x-user-id"]
+  const { task } = req.body
+
+  console.log("Request body:", req.body)
 
   if (!task || task.trim() === "") {
-    return res.status(400).send({ message: "Task content is required." });
+    return res.status(400).send({ message: "Task content is required." })
   }
 
   if (!userID) {
-    return res.status(400).send({ message: "UserID is required. Please ensure cookies are enabled." });
+    return res.status(400).send({ message: "UserID is required. Please ensure it's set in the request headers." })
   }
 
   try {
-    const newTask = await dataModel.create({ task, userID, completed: false });
-    console.log("Task saved successfully:", newTask);
-    res.status(201).send(newTask);
+    const newTask = await dataModel.create({ task, userID, completed: false })
+    console.log("Task saved successfully:", newTask)
+    res.status(201).send(newTask)
   } catch (error) {
-    console.error("Error saving task:", error);
-    res.status(500).send({ message: "Error saving task", error: error.message });
+    console.error("Error saving task:", error)
+    res.status(500).send({ message: "Error saving task", error: error.message })
   }
-};
+}
 
 // Update a task
 const updateTask = async (req, res) => {
-  const { task } = req.body;
-  const { id } = req.params;
+  const { task } = req.body
+  const { id } = req.params
+  const userID = req.headers["x-user-id"]
 
   if (!task || task.trim() === "") {
-    return res.status(400).send({ message: "Task content is required to update." });
+    return res.status(400).send({ message: "Task content is required to update." })
   }
 
   try {
-    const updatedTask = await dataModel.findOneAndUpdate(
-      { id },
-      { task },
-      { new: true }
-    );
+    const updatedTask = await dataModel.findOneAndUpdate({ id }, { task }, { new: true })
     if (!updatedTask) {
-      return res.status(404).send({ message: "Task not found." });
+      return res.status(404).send({ message: "Task not found." })
     }
-    res.send(updatedTask);
-    console.log("Request received to save task:", {updateTask}); 
+    res.send(updatedTask)
+    console.log("Request received to save task:", { updateTask })
   } catch (error) {
-    res.status(500).send({ message: "Error updating task", error: error.message });
+    res.status(500).send({ message: "Error updating task", error: error.message })
   }
-};
+}
 
 // Convert task content to uppercase
 const upperCaseTask = async (req, res) => {
-  const { id } = req.params;
-  const { task } = req.body;
+  const { id } = req.params
+  const { task } = req.body
+  const userID = req.headers["x-user-id"]
 
   if (!task || task.trim() === "") {
-    return res.status(400).send({ message: "Task content is required to update." });
+    return res.status(400).send({ message: "Task content is required to update." })
   }
 
   try {
-    const newTask = await dataModel.findOneAndUpdate(
-      { id },
-      { $set: { task: task.toUpperCase() } },
-      { new: true }
-    );
+    const newTask = await dataModel.findOneAndUpdate({ id }, { $set: { task: task.toUpperCase() } }, { new: true })
     if (!newTask) {
-      return res.status(404).send({ message: "Task not found." });
+      return res.status(404).send({ message: "Task not found." })
     }
-    res.send(newTask);
+    res.send(newTask)
   } catch (error) {
-    res.status(500).send({ message: "Error updating task", error: error.message });
+    res.status(500).send({ message: "Error updating task", error: error.message })
   }
-};
+}
 
 // Delete a task
 const deleteTask = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params
+  const userID = req.headers["x-user-id"]
 
   try {
-    const delTask = await dataModel.findOneAndDelete({ id });
+    const delTask = await dataModel.findOneAndDelete({ id })
     if (!delTask) {
-      return res.status(404).send({ message: "Task not found." });
+      return res.status(404).send({ message: "Task not found." })
     }
-    res.send(delTask);
+    res.send(delTask)
   } catch (error) {
-    res.status(500).send({ message: "Error deleting task", error: error.message });
+    res.status(500).send({ message: "Error deleting task", error: error.message })
   }
-};
+}
 
 // Mark task as completed or incomplete
 const completedTask = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params
+  const userID = req.headers["x-user-id"]
 
   try {
-    const task = await dataModel.findOne({ id });
+    const task = await dataModel.findOne({ id })
     if (!task) {
-      return res.status(404).send({ message: "Task not found." });
+      return res.status(404).send({ message: "Task not found." })
     }
 
-    const updatedTask = await dataModel.findOneAndUpdate(
-      { id },
-      { completed: !task.completed },
-      { new: true }
-    );
-    res.send(updatedTask);
+    const updatedTask = await dataModel.findOneAndUpdate({ id }, { completed: !task.completed }, { new: true })
+    res.send(updatedTask)
   } catch (error) {
-    res.status(500).send({ message: "Error updating task completion status", error: error.message });
+    res.status(500).send({ message: "Error updating task completion status", error: error.message })
   }
-};
+}
 
 module.exports = {
   getTask,
@@ -138,5 +127,6 @@ module.exports = {
   updateTask,
   upperCaseTask,
   deleteTask,
-  completedTask
-};
+  completedTask,
+}
+
