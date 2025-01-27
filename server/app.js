@@ -16,7 +16,7 @@ const {
 const app = express();
 
 const corsOptions = {
-  origin: "https://fullstack-todo-ai.vercel.app",
+  origin: "https://fullstack-todo-ai.onrender.com",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true,
 };
