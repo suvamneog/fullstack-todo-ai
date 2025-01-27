@@ -18,7 +18,7 @@ export const saveTask = async (task) => {
 export const delTask = async (id) => {
     const response = await axios.delete(`${API_URL}/tasks/${id}`, {
         withCredentials: true}  );
-        // console.log("Response from backend:", response.data);
+        console.log("Response from backend:", response.data);
     return response.data;
     };
 

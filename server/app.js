@@ -6,7 +6,7 @@ const connectDB = require("./db");
 const taskRoutes = require("./routes/tasks");
 require("dotenv").config();
 
-// (Import-CopilotKit)
+// (CopilotKit)
 const {
   CopilotRuntime,
   OpenAIAdapter,
