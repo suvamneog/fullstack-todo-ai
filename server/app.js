@@ -6,7 +6,7 @@ const connectDB = require("./db");
 const taskRoutes = require("./routes/tasks");
 require("dotenv").config();
 
-// (CopilotKitAi)
+// (CopilotKitAI)
 const {
   CopilotRuntime,
   OpenAIAdapter,
@@ -29,7 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(
-  "/tasks",
+  "/",
   (req, res, next) => {
     let userID = req.cookies.userID;
     if (!userID) {
@@ -45,6 +45,17 @@ app.use(
   },
   taskRoutes
 );
+
+app.get("/test-cookie", (req, res) => {
+  const userID = uuidv4();
+  res.cookie("testCookie", userID, {
+    httpOnly: true,
+    maxAge: 5 * 24 * 60 * 60 * 1000,
+    sameSite: "none",
+    secure: true,
+  });
+  res.send("Cookie set");
+});
 
 // Connect to database
 connectDB();
