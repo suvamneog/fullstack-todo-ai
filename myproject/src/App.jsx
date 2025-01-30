@@ -308,7 +308,7 @@ useCopilotAction({
         "--copilot-kit-primary-color": "#000000",
       }}
     >
-      <style>{`.copilotKitDevConsole { display: none !important; }`}</style>
+       <style>{`.copilotKitDevConsole { display: none !important; }`}</style>
       <InputField
         todos={todos}
         updateVal={(e) => setTodos(e.target.value)}

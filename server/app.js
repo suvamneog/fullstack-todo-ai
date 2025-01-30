@@ -16,7 +16,7 @@ const {
 const app = express();
 
 const corsOptions = {
-  origin: "https://fullstack-todo-ai.onrender.com",
+  origin: "http://localhost:5173",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true,
 };
@@ -29,7 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(
-  "/",
+  "/tasks",
   (req, res, next) => {
     let userID = req.cookies.userID;
     if (!userID) {
@@ -38,7 +38,7 @@ app.use(
         httpOnly: true,
         maxAge: 5 * 24 * 60 * 60 * 1000,
         sameSite: "none",
-        secure: true,
+        secure: false,
       });
     }
     next();
@@ -46,16 +46,6 @@ app.use(
   taskRoutes
 );
 
-app.get("/test-cookie", (req, res) => {
-  const userID = uuidv4();
-  res.cookie("testCookie", userID, {
-    httpOnly: true,
-    maxAge: 5 * 24 * 60 * 60 * 1000,
-    sameSite: "none",
-    secure: true,
-  });
-  res.send("Cookie set");
-});
 
 // Connect to database
 connectDB();
@@ -81,5 +71,6 @@ app.use("/copilotkit", (req, res, next) => {
 app.get("/", (req, res) => {
   res.redirect("/tasks");
 });
+
 
 module.exports = app;

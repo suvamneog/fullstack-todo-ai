@@ -2,7 +2,7 @@ import axios from "axios";
 const API_URL = "https://fullstacktodoai.onrender.com";
 
 export const fetchTask = async () => {
-    const response = await axios.get(`${API_URL}/tasks`, {
+    const response = await axios.get(`${API_URL}`, {
         withCredentials: true}  );
     return response.data;
 };
