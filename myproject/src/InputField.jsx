@@ -9,7 +9,7 @@ const InputField = ({ todos, updateVal, addButton }) => {
   ];
 
   const handleSubmit = () => {
-    console.log("Submitting task:", todos); // Debug log
+    console.log("Submitting task:", todos); // Debug-log
     addButton();
   };
 
